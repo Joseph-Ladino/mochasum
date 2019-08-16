@@ -3,7 +3,7 @@ var catImg = document.getElementById("mousetrail"),
     mouseCoords = [document.documentElement.clientWidth/2, document.documentElement.clientHeight/2],
     cancelframe=false;
     starttime = false,
-    colors = ["red", "orange", "yellow", "green", "blue"],
+    colors = ["red", "orange", "yellow", "green", "aqua"],
     prevColor = colors[colors.length-1],
     // Yeah I'm hotlinking to discord, sue me
     goodnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024103762919465/nom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024103125385226/nom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024087560192072/nom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024083647037450/nom3.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024081126129706/nom4.wav"],
