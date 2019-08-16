@@ -1,0 +1,25 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  background-image: url(https://www.bing.com/th?id=OIP.hzRcDAb6Ve_0IPtu9GSDQAHaE8&pid=Api&rs=1);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+h1 {
+  text-shadow: 2px 2px 5vh black;
+  color: transparent;
+  font-size: 15vh;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#mousetrail:hover {
+  cursor: pointer;
+}
