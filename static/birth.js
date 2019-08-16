@@ -102,7 +102,7 @@ function catMove() {
 }
 
 function catClick() {
-  playSound("./sounds/" + ((!isevil) ? "catpurr" : "evilpurr") + ".wav", false, false);
+  playSound("../sounds/" + ((!isevil) ? "catpurr" : "evilpurr") + ".wav", false, false);
   
   var imageSize = [parseInt((catImg.style.width).slice(0, -2)), parseInt((catImg.style.height).slice(0, -2))];
   
@@ -119,13 +119,13 @@ function catClick() {
     colorizeText(tempEl);
     tempEl.style.zIndex = 100;
     catImg.style.zIndex = 99;
-    if(document.getElementById("background").src != window.location.origin + "/sounds/evilbackground.wav") playSound("./sounds/evilbackground.wav", true, "background");
+    if(document.getElementById("background").src != window.location.origin + "/sounds/evilbackground.wav") playSound("../sounds/evilbackground.wav", true, "background");
   }
 }
 
 function catCaught() {
-  playSound("./sounds/" + choose(goodnoms) + ".wav");
-  if(isevil) playSound("./sounds/" + choose(evilnoms) + ".wav");
+  playSound("../sounds/" + choose(goodnoms) + ".wav");
+  if(isevil) playSound("../sounds/" + choose(evilnoms) + ".wav");
 }
 
 /* ***************** MAIN_LOOP ***************** */
@@ -151,7 +151,7 @@ function loop(timestamp) {
 
 
   setTimeout(()=>{
-    playSound("./sounds/background.wav", true, "background");
+    playSound("../sounds/background.wav", true, "background");
   }, 500);
   
 window.onload = function() {
