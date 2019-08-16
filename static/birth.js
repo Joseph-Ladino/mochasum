@@ -3,7 +3,7 @@ var catImg = document.getElementById("mousetrail"),
     mouseCoords = [document.documentElement.clientWidth/2, document.documentElement.clientHeight/2],
     cancelframe=false;
     starttime = false,
-    colors = ["red", "orange", "yellow", "green", "aqua"],
+    colors = ["red", "orange", "yellow", "green", "blue"],
     prevColor = colors[colors.length-1],
     // Yeah I'm hotlinking to discord, sue me
     goodnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024103762919465/nom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024103125385226/nom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024087560192072/nom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024083647037450/nom3.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024081126129706/nom4.wav"],
@@ -97,9 +97,9 @@ function colorizeText(elm) {
 
 function catRotate(mouseEvent) {
   catCoords = [(parseInt((catImg.style.left).slice(0, -2)) + (0)), (parseInt((catImg.style.top).slice(0, -2)) + (0))],
-  mouseCoords = [mouseEvent.screenX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.screenY - parseInt(catImg.style.height.slice(0,-2))],
   flip = (mouseCoords[0] <= catCoords[0]) ? 180 : 0;
-  
+  if(mouseEvent.type == "mousemove") mouseCoords = [mouseEvent.screenX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.screenY - parseInt(catImg.style.height.slice(0,-2))];
+  else mouseCoords = [mouseEvent.changedTouches[0].pageX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.changedTouches[0].pageY - parseInt(catImg.style.height.slice(0,-2))];
   catImg.style.position = "absolute";
   catImg.style.boxSizing = "border-box";
   catImg.style.transform = "rotate(" + (angle(mouseCoords, catCoords) + 180) + "deg) rotateX(" + (flip + 180) + "deg) ";
@@ -172,7 +172,10 @@ window.onload = function() {
   catImg.style.height = catImg.height + "px";
   catMove();
   document.addEventListener("mousemove", catRotate);
+  document.addEventListener("touchmove", catRotate);
+  document.addEventListener("touchstart", catRotate);
   catImg.addEventListener("mouseover", catCaught);
+  catImg.addEventListener("touchstart", catCaught);
   catImg.addEventListener("mousedown", catClick);
   requestAnimationFrame(loop);
   colorizeText(document.querySelector("h1"));

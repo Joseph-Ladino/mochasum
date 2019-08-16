@@ -13,9 +13,9 @@ html, body {
 }
 
 h1 {
-  text-shadow: 2px 2px 5vh black;
+  text-shadow: 2px 2px 3vw black;
   color: transparent;
-  font-size: 15vh;
+  font-size: 5vw;
   margin-top: 0;
   margin-bottom: 0;
 }
