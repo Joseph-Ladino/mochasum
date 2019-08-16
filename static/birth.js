@@ -11,7 +11,15 @@ var catImg = document.getElementById("mousetrail"),
     colorswap = false,
     framecount = 0,
     colorswapdelay = 5,
-    backgroundMusic = "";
+    assets = goodnoms.concat(evilnoms, "evilbackground");
+    
+    assets.forEach((val) => {
+      var tempLink = document.createElement("link");
+      tempLink.rel = "preload";
+      tempLink.href = "./" + val + ".wav";
+      tempLink.as = "audio";
+      document.head.append(tempLink);
+    });
 
 
 /* ***************** MISC_FUNCTIONS ***************** */
@@ -34,12 +42,12 @@ function distance(pos1, pos2, xy = false) {
   else return [distx, disty];
 }
 
-function playSound(src, loop = false, id = false) {
+function playSound(src, loop = false, id = "fx") {
   var audioElm;
   
   if(document.getElementById(id)) audioElm = document.getElementById(id);
   else if(id !== false) {audioElm =  new Audio(); audioElm.id = id; document.body.append(audioElm); audioELm = document.getElementById(id)}
-  else audioElm = new Audio();
+  else {id = (new Date()).getTime(); audioElm = new Audio(); audioElm.id = "audio" + id; document.body.append(audioElm); audioElm = document.getElementById("audio" + id)}
   
   audioElm.addEventListener("loadeddata", ()=>{
     
@@ -48,6 +56,10 @@ function playSound(src, loop = false, id = false) {
         audioElm.currentTime = 0;
         audioElm.play();
       }, false);
+    } else {
+      audioElm.addEventListener("ended", function() {
+        audioElm.remove();
+      });
     }
     
     audioElm.play().then(()=>{
@@ -102,7 +114,7 @@ function catMove() {
 }
 
 function catClick() {
-  playSound("./" + ((!isevil) ? "catpurr" : "evilpurr") + ".wav", false, false);
+  playSound("./" + ((!isevil) ? "catpurr" : "evilpurr") + ".wav", false, "fx");
   
   var imageSize = [parseInt((catImg.style.width).slice(0, -2)), parseInt((catImg.style.height).slice(0, -2))];
   
@@ -124,8 +136,8 @@ function catClick() {
 }
 
 function catCaught() {
-  playSound("./" + choose(goodnoms) + ".wav");
-  if(isevil) playSound("./" + choose(evilnoms) + ".wav");
+  playSound("./" + choose(goodnoms) + ".wav", false, "fx");
+  if(isevil) playSound("./" + choose(evilnoms) + ".wav", false, "fx2");
 }
 
 /* ***************** MAIN_LOOP ***************** */
