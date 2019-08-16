@@ -5,8 +5,9 @@ var catImg = document.getElementById("mousetrail"),
     starttime = false,
     colors = ["red", "orange", "yellow", "green", "blue"],
     prevColor = colors[colors.length-1],
-    goodnoms = ["nom0", "nom1", "nom2", "nom3", "nom4"],
-    evilnoms = ["evilnom0", "evilnom1", "evilnom2", "evilnom3"],
+    // Yeah I'm hotlinking to discord, sue me
+    goodnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024103762919465/nom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024103125385226/nom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024087560192072/nom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024083647037450/nom3.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024081126129706/nom4.wav"],
+    evilnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024141544947890/evilnom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024117415378945/evilnom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024109273972746/evilnom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024104744255603/evilnom3.wav"],
     isevil = false,
     colorswap = false,
     framecount = 0,
@@ -16,7 +17,7 @@ var catImg = document.getElementById("mousetrail"),
     assets.forEach((val) => {
       var tempLink = document.createElement("link");
       tempLink.rel = "preload";
-      tempLink.href = "./" + val + ".wav";
+      tempLink.href = val;
       tempLink.as = "audio";
       document.head.append(tempLink);
     });
@@ -42,12 +43,12 @@ function distance(pos1, pos2, xy = false) {
   else return [distx, disty];
 }
 
-function playSound(src, loop = false, id = "fx") {
+function playSound(src, loop = false, id=false) {
   var audioElm;
   
   if(document.getElementById(id)) audioElm = document.getElementById(id);
   else if(id !== false) {audioElm =  new Audio(); audioElm.id = id; document.body.append(audioElm); audioELm = document.getElementById(id)}
-  else {id = (new Date()).getTime(); audioElm = new Audio(); audioElm.id = "audio" + id; document.body.append(audioElm); audioElm = document.getElementById("audio" + id)}
+  else audioElm = new Audio();
   
   audioElm.addEventListener("loadeddata", ()=>{
     
@@ -114,7 +115,7 @@ function catMove() {
 }
 
 function catClick() {
-  playSound("./" + ((!isevil) ? "catpurr" : "evilpurr") + ".wav", false, "fx");
+  playSound(((!isevil) ? "https://cdn.discordapp.com/attachments/292072220518383616/612024145332666379/catpurr.wav" : "https://cdn.discordapp.com/attachments/292072220518383616/612024103385301035/evilpurr.wav"), false, "fx");
   
   var imageSize = [parseInt((catImg.style.width).slice(0, -2)), parseInt((catImg.style.height).slice(0, -2))];
   
@@ -131,13 +132,13 @@ function catClick() {
     colorizeText(tempEl);
     tempEl.style.zIndex = 100;
     catImg.style.zIndex = 99;
-    if(document.getElementById("background").src != window.location.origin + "/sounds/evilbackground.wav") playSound("./evilbackground.wav", true, "background");
+    if(document.getElementById("background").src != window.location.origin + "./evilbackground.wav") playSound("./evilbackground.wav", true, "background");
   }
 }
 
 function catCaught() {
-  playSound("./" + choose(goodnoms) + ".wav", false, "fx");
-  if(isevil) playSound("./" + choose(evilnoms) + ".wav", false, "fx2");
+  playSound(choose(goodnoms));
+  if(isevil) playSound(choose(evilnoms));
 }
 
 /* ***************** MAIN_LOOP ***************** */
