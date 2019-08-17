@@ -9,10 +9,10 @@ var catImg = document.getElementById("mousetrail"),
     goodnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024103762919465/nom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024103125385226/nom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024087560192072/nom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024083647037450/nom3.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024081126129706/nom4.wav"],
     evilnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024141544947890/evilnom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024117415378945/evilnom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024109273972746/evilnom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024104744255603/evilnom3.wav"],
     isevil = false,
-    colorswap = false,
     framecount = 0,
     colorswapdelay = 5,
-    assets = goodnoms.concat(evilnoms, "evilbackground");
+    assets = goodnoms.concat(evilnoms, "evilbackground"),
+    curSong = "background";
     
     assets.forEach((val) => {
       var tempLink = document.createElement("link");
@@ -84,7 +84,7 @@ function colorizeText(elm) {
   charSplat.forEach((letter) => {
     
     var index = colors.indexOf(prevColor);
-    index = (index == colors.length-1) ? 0 : index+1;
+    index = (index == colors.length-1) ? 0 : index + 1;
     color = colors[index];
     outstring += "<span style='color: " + color + "'>" + letter + "</span>";
     prevColor = (letter == " ") ? prevColor : color;
@@ -93,23 +93,41 @@ function colorizeText(elm) {
   elm.innerHTML = outstring;
 }
 
+function resetGame(event) {
+  if(event.key == "r" || event.type == "click") {
+    catImg.height = 200;
+    catImg.width = 125;
+    catImg.style.height = 200+"px";
+    catImg.style.width = 125+"px";
+    isevil = false;
+    document.querySelector("h1").innerText = "Happy Birthday Mom!";
+    prevColor = colors[colors.length-1];
+    colorizeText(document.querySelector("h1"));
+    document.getElementById("background").src = "./background.wav";
+    curSong = "background";
+  }
+}
+
 /* ***************** CAT_FUNCTIONS ***************** */
 
 function catRotate(mouseEvent) {
   catCoords = [(parseInt((catImg.style.left).slice(0, -2)) + (0)), (parseInt((catImg.style.top).slice(0, -2)) + (0))],
   flip = (mouseCoords[0] <= catCoords[0]) ? 180 : 0;
-  if(mouseEvent.type == "mousemove") mouseCoords = [mouseEvent.screenX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.screenY - parseInt(catImg.style.height.slice(0,-2))];
-  else mouseCoords = [mouseEvent.changedTouches[0].pageX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.changedTouches[0].pageY - parseInt(catImg.style.height.slice(0,-2))];
+  if(mouseEvent.type == "mousemove") mouseCoords = [mouseEvent.clientX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.clientY - parseInt(catImg.style.height.slice(0,-2)/2)];
+  else mouseCoords = [mouseEvent.changedTouches[0].pageX - parseInt(catImg.style.width.slice(0,-2))/1.5, mouseEvent.changedTouches[0].pageY - parseInt(catImg.style.height.slice(0,-2)/2)];
   catImg.style.position = "absolute";
   catImg.style.boxSizing = "border-box";
   catImg.style.transform = "rotate(" + (angle(mouseCoords, catCoords) + 180) + "deg) rotateX(" + (flip + 180) + "deg) ";
+  
+  if(!cancelframe) requestAnimationFrame(loop);
+  
+  cancelframe = (distance(mouseCoords, catCoords) >= catImg.height/2) ? false : true;
 }
 
 function catMove() {
   var speed = 25,
   difference = distance(mouseCoords, catCoords, true),
   moveby = [difference[0]/speed, difference[1]/speed];
-  
   catImg.style.left = (catCoords[0] + moveby[0]*-1) + "px";
   catImg.style.top = (catCoords[1] + moveby[1]*-1) + "px";
 }
@@ -126,13 +144,11 @@ function catClick() {
   
   if(newSize[1] >= document.documentElement.clientHeight / 2) {
     var tempEl = document.querySelector("h1");
-    colorswap = true;
     isevil = true;
-    tempEl.innerHTML = "Happy Birthday Mom! \n Also, Mocha\'s evil now :3";
+    tempEl.innerHTML = "Happy Birthday Mom! Also, Mocha\'s evil now :3";
     colorizeText(tempEl);
     tempEl.style.zIndex = 100;
     catImg.style.zIndex = 99;
-    if(document.getElementById("background").src != window.location.origin + "./evilbackground.wav") playSound("./evilbackground.wav", true, "background");
   }
 }
 
@@ -149,8 +165,9 @@ function loop(timestamp) {
         progress = now - starttime;
         
     catMove();
+    if(isevil && curSong == "background") {document.getElementById("background").src = "./evilbackground.wav"; curSong = "evilbackground"}
     
-    if(colorswap && framecount >= colorswapdelay) {
+    if(isevil && framecount >= colorswapdelay) {
       colorizeText(document.querySelector("h1"));
       framecount = 0;
     } else {
@@ -174,6 +191,8 @@ window.onload = function() {
   document.addEventListener("mousemove", catRotate);
   document.addEventListener("touchmove", catRotate);
   document.addEventListener("touchstart", catRotate);
+  document.addEventListener("keyup", resetGame);
+  document.querySelector("h1").addEventListener("click", resetGame);
   catImg.addEventListener("mouseover", catCaught);
   catImg.addEventListener("touchstart", catCaught);
   catImg.addEventListener("mousedown", catClick);

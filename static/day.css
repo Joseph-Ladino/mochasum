@@ -20,6 +20,6 @@ h1 {
   margin-bottom: 0;
 }
 
-#mousetrail:hover {
+#mousetrail:hover, h1:hover {
   cursor: pointer;
 }
