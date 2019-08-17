@@ -1,8 +1,14 @@
 html, body {
   height: 100%;
   width: 100%;
+  overflow: hidden;
+}
+
+body {
   background-image: url(https://www.bing.com/th?id=OIP.hzRcDAb6Ve_0IPtu9GSDQAHaE8&pid=Api&rs=1);
-  background-size: cover;
+  background-size: contain;
+  background-position: center;
+  background-color: deeppink;
   background-repeat: no-repeat;
 }
 
@@ -10,6 +16,10 @@ html, body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+img {
+  object-fit: contain;
 }
 
 h1 {

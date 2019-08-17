@@ -10,15 +10,18 @@ var catImg = document.getElementById("mousetrail"),
     evilnoms = ["https://cdn.discordapp.com/attachments/292072220518383616/612024141544947890/evilnom0.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024117415378945/evilnom1.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024109273972746/evilnom2.wav", "https://cdn.discordapp.com/attachments/292072220518383616/612024104744255603/evilnom3.wav"],
     isevil = false,
     framecount = 0,
-    colorswapdelay = 5,
+    swapInterval = null,
+    colorswapdelay = 200,
     assets = goodnoms.concat(evilnoms, "evilbackground"),
-    curSong = "background";
+    curSong = "background",
+    bgImage = "cake";
     
     assets.forEach((val) => {
       var tempLink = document.createElement("link");
       tempLink.rel = "preload";
       tempLink.href = val;
       tempLink.as = "audio";
+      tempLink.type = "audio/wav";
       document.head.append(tempLink);
     });
 
@@ -105,6 +108,9 @@ function resetGame(event) {
     colorizeText(document.querySelector("h1"));
     document.getElementById("background").src = "./background.wav";
     curSong = "background";
+    document.body.style.backgroundImage = "url(https://www.bing.com/th?id=OIP.hzRcDAb6Ve_0IPtu9GSDQAHaE8&pid=Api&rs=1)";
+    document.body.style.backgroundColor = "deeppink";
+    if(swapInterval !== null) clearInterval(swapInterval);
   }
 }
 
@@ -121,7 +127,7 @@ function catRotate(mouseEvent) {
   
   if(!cancelframe) requestAnimationFrame(loop);
   
-  cancelframe = (distance(mouseCoords, catCoords) >= catImg.height/2) ? false : true;
+  cancelframe = (distance(mouseCoords, catCoords) >= 100) ? false : true;
 }
 
 function catMove() {
@@ -142,11 +148,13 @@ function catClick() {
   catImg.style.width = newSize[0] + "px";
   catImg.style.height = newSize[1] + "px";
   
-  if(newSize[1] >= document.documentElement.clientHeight / 2) {
+  if(newSize[1] >= document.documentElement.clientHeight / 1.2) {
+    
     var tempEl = document.querySelector("h1");
     isevil = true;
     tempEl.innerHTML = "Happy Birthday Mom! Also, Mocha\'s evil now :3";
     colorizeText(tempEl);
+    swapInterval = (swapInterval === null) ? setInterval(()=>{colorizeText(document.querySelector("h1"))}, colorswapdelay) : swapInterval;
     tempEl.style.zIndex = 100;
     catImg.style.zIndex = 99;
   }
@@ -166,13 +174,7 @@ function loop(timestamp) {
         
     catMove();
     if(isevil && curSong == "background") {document.getElementById("background").src = "./evilbackground.wav"; curSong = "evilbackground"}
-    
-    if(isevil && framecount >= colorswapdelay) {
-      colorizeText(document.querySelector("h1"));
-      framecount = 0;
-    } else {
-      framecount++;
-    }
+    if(isevil && bgImage == "cake") {document.body.style.backgroundImage = "url(https://cdn.discordapp.com/attachments/611614738182307923/612122361298288660/unknown.png)"; bgImg = "mark"; document.body.style.backgroundColor = "blue";};
 
     if(!cancelframe) {
       requestAnimationFrame(loop);
